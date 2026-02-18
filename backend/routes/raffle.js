@@ -47,8 +47,12 @@ router.post('/draw', async (req, res) => {
       });
     }
 
-    // Randomly select winners
-    const shuffled = eligibleParticipants.sort(() => 0.5 - Math.random());
+    // Randomly select winners using Fisher-Yates shuffle
+    const shuffled = [...eligibleParticipants];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
     const selectedWinners = shuffled.slice(0, numberOfWinners);
 
     // Mark as winners

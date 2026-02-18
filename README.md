@@ -55,7 +55,7 @@ npm install
 cp .env.example .env
 
 # Edit .env with your backend API URL (default is http://localhost:5000/api)
-# REACT_APP_API_URL=http://localhost:5000/api
+# VITE_API_URL=http://localhost:5000/api
 ```
 
 ## Running the Application
