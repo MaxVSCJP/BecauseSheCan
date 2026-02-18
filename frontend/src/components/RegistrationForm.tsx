@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { submitForm, getFormFields } from '../services/api';
+import type { FormField } from '../types';
 import './RegistrationForm.css';
 
-const RegistrationForm = () => {
-  const [formFields, setFormFields] = useState([]);
-  const [formData, setFormData] = useState({});
+const RegistrationForm: React.FC = () => {
+  const [formFields, setFormFields] = useState<FormField[]>([]);
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const RegistrationForm = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -32,7 +33,7 @@ const RegistrationForm = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -57,7 +58,7 @@ const RegistrationForm = () => {
           <p>Thank you for joining Because She Can!</p>
           <div className="avatar-container">
             <h3>Your Avatar:</h3>
-            <img src={avatar} alt="Your Avatar" className="avatar" />
+            {avatar && <img src={avatar} alt="Your Avatar" className="avatar" />}
           </div>
           <p className="raffle-message">You've been entered into the raffle! 🎉</p>
         </div>

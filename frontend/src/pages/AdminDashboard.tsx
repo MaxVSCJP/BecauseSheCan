@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   getFormFields,
   createFormField,
-  updateFormField,
   deleteFormField,
   getRaffleSettings,
   updateRaffleSettings,
@@ -10,26 +9,46 @@ import {
   drawWinners,
   getWinners
 } from '../services/api';
+import type { FormField, Participant, RaffleSettings } from '../types';
 import './AdminDashboard.css';
 
-const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('fields');
-  const [formFields, setFormFields] = useState([]);
-  const [participants, setParticipants] = useState([]);
-  const [winners, setWinners] = useState([]);
-  const [raffleSettings, setRaffleSettings] = useState({
+type TabType = 'fields' | 'raffle' | 'participants';
+
+interface NewField {
+  name: string;
+  label: string;
+  type: 'text' | 'email' | 'number' | 'select' | 'textarea';
+  required: boolean;
+  options: string;
+  order: number;
+  active: boolean;
+}
+
+interface Message {
+  text: string;
+  type: 'success' | 'error';
+}
+
+const AdminDashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabType>('fields');
+  const [formFields, setFormFields] = useState<FormField[]>([]);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [winners, setWinners] = useState<Participant[]>([]);
+  const [raffleSettings, setRaffleSettings] = useState<RaffleSettings>({
     prize: '',
     description: '',
     numberOfWinners: 1
   });
-  const [newField, setNewField] = useState({
+  const [newField, setNewField] = useState<NewField>({
     name: '',
     label: '',
     type: 'text',
     required: false,
-    options: ''
+    options: '',
+    order: 0,
+    active: true
   });
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<Message | null>(null);
 
   useEffect(() => {
     loadData();
@@ -55,12 +74,12 @@ const AdminDashboard = () => {
     }
   };
 
-  const showMessage = (text, type = 'success') => {
+  const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
     setMessage({ text, type });
-    setTimeout(() => setMessage(''), 3000);
+    setTimeout(() => setMessage(null), 3000);
   };
 
-  const handleAddField = async (e) => {
+  const handleAddField = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const fieldData = {
@@ -69,7 +88,7 @@ const AdminDashboard = () => {
       };
       await createFormField(fieldData);
       showMessage('Field added successfully');
-      setNewField({ name: '', label: '', type: 'text', required: false, options: '' });
+      setNewField({ name: '', label: '', type: 'text', required: false, options: '', order: 0, active: true });
       loadData();
     } catch (error) {
       console.error('Error adding field:', error);
@@ -77,7 +96,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDeleteField = async (id) => {
+  const handleDeleteField = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this field?')) {
       try {
         await deleteFormField(id);
@@ -90,7 +109,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleUpdateRaffle = async (e) => {
+  const handleUpdateRaffle = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await updateRaffleSettings(raffleSettings);
@@ -107,7 +126,7 @@ const AdminDashboard = () => {
         const response = await drawWinners();
         showMessage(response.data.message);
         loadData();
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error drawing winners:', error);
         showMessage(error.response?.data?.error || 'Failed to draw winners', 'error');
       }
@@ -170,7 +189,7 @@ const AdminDashboard = () => {
                 />
                 <select
                   value={newField.type}
-                  onChange={(e) => setNewField({ ...newField, type: e.target.value })}
+                  onChange={(e) => setNewField({ ...newField, type: e.target.value as NewField['type'] })}
                 >
                   <option value="text">Text</option>
                   <option value="email">Email</option>

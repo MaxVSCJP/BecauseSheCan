@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import './Home.css';
 
-const Home = () => {
+const Home: React.FC = () => {
   // Get the current URL for the form
   const formUrl = `${window.location.origin}/register`;
 
@@ -16,7 +16,7 @@ const Home = () => {
         <div className="qr-section">
           <h2>Scan to Register</h2>
           <div className="qr-code-wrapper">
-            <QRCode 
+            <QRCodeSVG 
               value={formUrl} 
               size={256}
               level="H"
