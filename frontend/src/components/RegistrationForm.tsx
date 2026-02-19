@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { submitForm, getFormFields } from '../services/api';
+import { submitForm, getPublicFormFields } from '../services/api';
 import type { FormField } from '../types';
 import './RegistrationForm.css';
+import BSCSign from '../assets/BSCSign.jpg';
 
 const RegistrationForm: React.FC = () => {
   const [formFields, setFormFields] = useState<FormField[]>([]);
@@ -17,7 +18,7 @@ const RegistrationForm: React.FC = () => {
 
   const loadFormFields = async () => {
     try {
-      const response = await getFormFields();
+      const response = await getPublicFormFields();
       setFormFields(response.data);
     } catch (error) {
       console.error('Error loading form fields:', error);
@@ -69,9 +70,8 @@ const RegistrationForm: React.FC = () => {
   return (
     <div className="form-container">
       <div className="form-card">
-        <h1>Because She Can</h1>
+        <img src={BSCSign} alt="Because She Can Sign" className="form-signature" />
         <p className="subtitle">Empowering Women in Tech</p>
-        
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>

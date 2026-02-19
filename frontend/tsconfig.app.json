@@ -15,6 +15,10 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
 
     /* Linting */
     "strict": true,
@@ -24,5 +28,20 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": [
+    "src/main.tsx",
+    "src/App.tsx",
+    "src/index.css",
+    "src/pages/**/*",
+    "src/components/RegistrationForm.tsx",
+    "src/components/RegistrationForm.css",
+    "src/services/**/*",
+    "src/types/**/*",
+    "src/components/ui/button.tsx",
+    "src/components/ui/input.tsx",
+    "src/components/ui/textarea.tsx",
+    "src/components/ui/alert-dialog.tsx",
+    "src/lib/utils.ts",
+    "src/assets/**/*"
+  ]
 }

@@ -1,5 +1,8 @@
 import axios from 'axios';
 import type {
+  AdminAuthResponse,
+  AdminUser,
+  CurrentAdminResponse,
   FormField,
   Participant,
   RaffleSettings,
@@ -12,14 +15,37 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+// Auth endpoints
+export const adminLogin = async (username: string, password: string) => {
+  const response = await api.post<AdminAuthResponse>('/auth/login', { username, password });
+  return response;
+};
+
+export const adminLogoutRequest = async () => {
+  try {
+    await api.post('/auth/logout');
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+};
+
+export const getCurrentAdmin = () => {
+  return api.get<CurrentAdminResponse>('/auth/me');
+};
+
 // Participant endpoints
 export const submitForm = (formData: Record<string, string>) => {
   return api.post<SubmitFormResponse>('/participants/submit', { formData });
+};
+
+export const getPublicFormFields = () => {
+  return api.get<FormField[]>('/participants/fields');
 };
 
 export const getParticipants = () => {
@@ -31,7 +57,7 @@ export const getParticipantCount = () => {
 };
 
 // Admin endpoints
-export const getFormFields = () => {
+export const getAdminFormFields = () => {
   return api.get<FormField[]>('/admin/fields');
 };
 
@@ -57,6 +83,18 @@ export const updateRaffleSettings = (settings: Partial<RaffleSettings>) => {
 
 export const getAdminParticipants = () => {
   return api.get<Participant[]>('/admin/participants');
+};
+
+export const getAdminUsers = () => {
+  return api.get<AdminUser[]>('/admin/users');
+};
+
+export const createAdminUser = (username: string, password: string) => {
+  return api.post<AdminUser>('/admin/users', { username, password });
+};
+
+export const deleteAdminUser = (id: string) => {
+  return api.delete<{ message: string }>(`/admin/users/${id}`);
 };
 
 // Raffle endpoints

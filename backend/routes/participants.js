@@ -4,6 +4,17 @@ const Participant = require('../models/Participant');
 const FormField = require('../models/FormField');
 const { generateAvatar } = require('../utils/avatarGenerator');
 
+// Get active form fields (public)
+router.get('/fields', async (req, res) => {
+  try {
+    const fields = await FormField.find({ active: true }).sort({ order: 1 });
+    res.json(fields);
+  } catch (error) {
+    console.error('Error fetching form fields:', error);
+    res.status(500).json({ error: 'Failed to fetch form fields' });
+  }
+});
+
 // Submit form
 router.post('/submit', async (req, res) => {
   try {

@@ -5,17 +5,18 @@ A comprehensive system for the "Because She Can" initiative - empowering women i
 ## Features
 
 - 📝 **Dynamic Registration Form**: Admin-configurable form fields for gathering demographic data
-- 🎨 **Avatar Generation**: Automatic generation of avatars with Ethiopian skin tones (light caramel to dark chocolate)
+- 🎨 **Avatar Generation**: Bitmoji-style avatar generation using DiceBear (free)
 - 🎁 **Raffle System**: Automated raffle system with customizable prizes and winner selection
 - 📱 **QR Code**: Easy registration access via QR code
-- 👑 **Admin Dashboard**: Comprehensive management console for form configuration, participant tracking, and raffle management
+- 👑 **Admin Dashboard**: Protected management console with login-only access and admin user management
+- 🛡️ **Superadmin Controls**: Only the seeded superadmin can create/manage/delete admin accounts
 
 ## Tech Stack
 
 - **Frontend**: React, React Router, Axios
 - **Backend**: Node.js, Express
 - **Database**: MongoDB with Mongoose
-- **Additional Libraries**: Canvas (avatar generation), QRCode.react (QR codes)
+- **Additional Libraries**: DiceBear API (avatars), QRCode.react (QR codes), JWT (admin auth)
 
 ## Prerequisites
 
@@ -41,8 +42,9 @@ npm install
 # Create a .env file based on .env.example
 cp .env.example .env
 
-# Edit .env with your MongoDB connection string
+# Edit .env with your MongoDB connection string and JWT secret
 # MONGODB_URI=mongodb://localhost:27017/becauseshecan
+# JWT_SECRET=change-me-to-a-long-random-secret
 ```
 
 ### 3. Frontend Setup
@@ -105,17 +107,21 @@ The frontend will run on `http://localhost:3000`
 
 ### For Administrators
 
-1. Navigate to `http://localhost:3000/admin`
-2. **Form Fields Tab**: 
+1. Navigate to `http://localhost:3000/admin/login`
+2. Create your superadmin account from the backend folder:
+   - `npm run create-admin -- admin_username strong_password_here`
+3. Sign in with that account
+4. Create additional admin users in the **Admin Users** tab (superadmin only)
+4. **Form Fields Tab**: 
    - Add, edit, or remove form fields
    - Configure field types (text, email, number, select, textarea)
    - Mark fields as required or optional
-3. **Raffle Settings Tab**:
+5. **Raffle Settings Tab**:
    - Set prize name and description
    - Configure number of winners
    - Draw winners randomly
    - View current winners
-4. **Participants Tab**:
+6. **Participants Tab**:
    - View all registered participants
    - See participant details and avatars
    - Identify raffle winners
@@ -128,6 +134,12 @@ The frontend will run on `http://localhost:3000`
 - `GET /api/participants` - Get all participants (public view)
 - `GET /api/participants/count` - Get participant count
 
+### Auth Endpoints
+
+- `POST /api/auth/login` - Admin login
+- `GET /api/auth/me` - Get current authenticated admin
+- `POST /api/auth/logout` - Logout admin
+
 ### Admin Endpoints
 
 - `GET /api/admin/fields` - Get all form fields
@@ -137,20 +149,22 @@ The frontend will run on `http://localhost:3000`
 - `GET /api/admin/raffle` - Get raffle settings
 - `PUT /api/admin/raffle` - Update raffle settings
 - `GET /api/admin/participants` - Get all participants (admin view)
+- `GET /api/admin/users` - Get all admin users
+- `POST /api/admin/users` - Create an admin user (superadmin only)
+- `DELETE /api/admin/users/:id` - Delete an admin user (superadmin only)
 
 ### Raffle Endpoints
 
 - `GET /api/raffle/info` - Get raffle information
-- `POST /api/raffle/draw` - Draw raffle winners
+- `POST /api/raffle/draw` - Draw raffle winners (admin auth required)
 - `GET /api/raffle/winners` - Get all winners
 
 ## Avatar Generation
 
-The system automatically generates unique avatars for each participant with:
-- Ethiopian skin tones (8 shades from light caramel to dark chocolate)
-- Randomized hair colors (black to brown tones)
-- Randomized eye colors (dark brown to black)
-- Simple facial features (eyes, nose, smile)
+The system generates avatar URLs using DiceBear's free API:
+- Style: `adventurer` (cartoon/Bitmoji-like)
+- Endpoint: `https://api.dicebear.com/9.x/adventurer/svg?seed=...`
+- API key: **not required**
 
 ## Project Structure
 

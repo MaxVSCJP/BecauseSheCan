@@ -7,7 +7,7 @@ const participantSchema = new mongoose.Schema({
     required: true
   },
   avatar: {
-    type: String, // Base64 encoded image
+    type: String,
     required: true
   },
   submittedAt: {

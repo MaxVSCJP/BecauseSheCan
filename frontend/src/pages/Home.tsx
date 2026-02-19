@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import './Home.css';
+import BSCHorizontal from '../assets/BSCHorizontal.png';
 
 const Home: React.FC = () => {
   // Get the current URL for the form
@@ -10,28 +11,26 @@ const Home: React.FC = () => {
   return (
     <div className="home-container">
       <div className="home-content">
-        <h1>Because She Can</h1>
+        <img src={BSCHorizontal} alt="" />
         <p className="tagline">Empowering Women in Tech</p>
         
         <div className="qr-section">
           <h2>Scan to Register</h2>
           <div className="qr-code-wrapper">
-            <QRCodeSVG 
-              value={formUrl} 
+            <QRCodeSVG
+              value={formUrl}
               size={256}
+              className="qr-code-svg"
+              fgColor="#4f0944"
               level="H"
               includeMargin={true}
             />
           </div>
-          <p className="qr-url">{formUrl}</p>
         </div>
 
         <div className="actions">
           <Link to="/register" className="btn btn-primary">
             Register Now
-          </Link>
-          <Link to="/admin" className="btn btn-secondary">
-            Admin Dashboard
           </Link>
         </div>
 

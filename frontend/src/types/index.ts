@@ -53,3 +53,27 @@ export interface DrawWinnersResponse {
   message: string;
   winners: Participant[];
 }
+
+export interface AdminUser {
+  _id: string;
+  username: string;
+  role: 'superadmin' | 'admin';
+  createdAt: string;
+}
+
+export interface AdminAuthResponse {
+  token: string;
+  user: {
+    id: string;
+    username: string;
+    role: 'superadmin' | 'admin';
+  };
+}
+
+export interface CurrentAdminResponse {
+  user: {
+    id: string;
+    username: string;
+    role: 'superadmin' | 'admin';
+  };
+}

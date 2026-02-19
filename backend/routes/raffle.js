@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Participant = require('../models/Participant');
 const RaffleSettings = require('../models/RaffleSettings');
+const authenticateAdmin = require('../middleware/authenticateAdmin');
 
 // Get raffle info
 router.get('/info', async (req, res) => {
@@ -22,7 +23,7 @@ router.get('/info', async (req, res) => {
 });
 
 // Draw winners
-router.post('/draw', async (req, res) => {
+router.post('/draw', authenticateAdmin, async (req, res) => {
   try {
     const settings = await RaffleSettings.findOne();
     if (!settings) {
