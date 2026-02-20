@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { submitForm, getPublicFormFields } from '../services/api';
-import type { FormField } from '../types';
-import './RegistrationForm.css';
-import BSCSign from '../assets/BSCSign.jpg';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { submitForm, getPublicFormFields } from "../services/api";
+import type { FormField } from "../types";
+import "./RegistrationForm.css";
+import BSCSign from "../assets/BSCSign.jpg";
 
 const RegistrationForm: React.FC = () => {
   const [formFields, setFormFields] = useState<FormField[]>([]);
@@ -10,7 +11,8 @@ const RegistrationForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadFormFields();
@@ -21,31 +23,35 @@ const RegistrationForm: React.FC = () => {
       const response = await getPublicFormFields();
       setFormFields(response.data);
     } catch (error) {
-      console.error('Error loading form fields:', error);
-      setError('Failed to load form fields');
+      console.error("Error loading form fields:", error);
+      setError("Failed to load form fields");
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const response = await submitForm(formData);
       setAvatar(response.data.participant.avatar);
       setSubmitted(true);
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setError('Failed to submit form. Please try again.');
+      console.error("Error submitting form:", error);
+      setError("Failed to submit form. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -59,9 +65,24 @@ const RegistrationForm: React.FC = () => {
           <p>Thank you for joining Because She Can!</p>
           <div className="avatar-container">
             <h3>Your Avatar:</h3>
-            {avatar && <img src={avatar} alt="Your Avatar" className="avatar" />}
+            {avatar && (
+              <img src={avatar} alt="Your Avatar" className="avatar" />
+            )}
           </div>
-          <p className="raffle-message">You've been entered into the raffle! 🎉</p>
+          <p className="raffle-message">
+            You've been entered into the raffle! 🎉
+          </p>
+          <button
+          className="register-btn"
+            type="button"
+            onClick={() =>
+             window.open(
+                "https://docs.google.com/forms/d/e/1FAIpQLSc3eJfsNX7UYdH8ljoDijNEpvFHoEEbRmQBUPyqiKMTV_brNA/viewform",
+              )
+            }
+          >
+            Register to be a member of Because She Can
+          </button>
         </div>
       </div>
     );
@@ -70,47 +91,54 @@ const RegistrationForm: React.FC = () => {
   return (
     <div className="form-container">
       <div className="form-card">
-        <img src={BSCSign} alt="Because She Can Sign" className="form-signature" />
+        <img
+          src={BSCSign}
+          alt="Because She Can Sign"
+          className="form-signature"
+        />
         <p className="subtitle">Empowering Women in Tech</p>
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          {formFields.map(field => (
+          {formFields.map((field) => (
             <div key={field._id} className="form-group">
               <label htmlFor={field.name}>
                 {field.label}
                 {field.required && <span className="required">*</span>}
               </label>
-              
-              {field.type === 'textarea' ? (
+
+              {field.type === "textarea" ? (
                 <textarea
                   id={field.name}
                   name={field.name}
-                  value={formData[field.name] || ''}
+                  value={formData[field.name] || ""}
                   onChange={handleChange}
                   required={field.required}
                   className="form-input"
                 />
-              ) : field.type === 'select' ? (
+              ) : field.type === "select" ? (
                 <select
                   id={field.name}
                   name={field.name}
-                  value={formData[field.name] || ''}
+                  value={formData[field.name] || ""}
                   onChange={handleChange}
                   required={field.required}
                   className="form-input"
                 >
                   <option value="">Select...</option>
-                  {field.options && field.options.map((option, idx) => (
-                    <option key={idx} value={option}>{option}</option>
-                  ))}
+                  {field.options &&
+                    field.options.map((option, idx) => (
+                      <option key={idx} value={option}>
+                        {option}
+                      </option>
+                    ))}
                 </select>
               ) : (
                 <input
                   type={field.type}
                   id={field.name}
                   name={field.name}
-                  value={formData[field.name] || ''}
+                  value={formData[field.name] || ""}
                   onChange={handleChange}
                   required={field.required}
                   className="form-input"
@@ -120,7 +148,7 @@ const RegistrationForm: React.FC = () => {
           ))}
 
           <button type="submit" disabled={loading} className="submit-button">
-            {loading ? 'Submitting...' : 'Register'}
+            {loading ? "Submitting..." : "Enter Raffle"}
           </button>
         </form>
       </div>

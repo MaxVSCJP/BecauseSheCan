@@ -79,7 +79,11 @@ textarea.form-input {
   min-height: 100px;
 }
 
-.submit-button {
+.register-btn {
+  margin-top: 20px;
+}
+
+.submit-button, .register-btn {
   width: 100%;
   padding: 15px;
   background: var(--color-primary);
@@ -94,7 +98,7 @@ textarea.form-input {
     box-shadow 0.2s;
 }
 
-.submit-button:hover {
+.submit-button:hover, .register-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(79, 9, 68, 0.35);
 }
