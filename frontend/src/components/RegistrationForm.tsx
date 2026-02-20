@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { submitForm, getPublicFormFields } from "../services/api";
 import type { FormField } from "../types";
 import "./RegistrationForm.css";
@@ -12,7 +11,6 @@ const RegistrationForm: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadFormFields();
